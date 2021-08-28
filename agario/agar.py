@@ -122,6 +122,8 @@ def main_loop():
     running = True
     i = 0
     j = 0
+    px = 950
+    py = 500
     move1 = 0
     move2 = 0
     nove1 = 0
@@ -139,6 +141,8 @@ def main_loop():
     f = 0
     size = 20
     iasize = 20
+    restart = 0
+    iarestart = 0
     iax = randint(100,1820)
     iay = randint(100,1180)
     for i in range(200):
@@ -164,8 +168,8 @@ def main_loop():
         pos = pygame.mouse.get_pos()
         #print(950+move1,500+move2)
         pressed_keys = pygame.key.get_pressed()
-        psx = 950 + move1
-        psy = 500 + move2
+        psx = px + move1
+        psy = py + move2
         piax = iax + nove1
         piay = iay + nove2
         s = size - 20
@@ -173,13 +177,13 @@ def main_loop():
         slow = size/500
         wlow = iasize/500
         print(int(iax+nove1),int(iay+nove2),pos_x[0],pos_y[0])
-        if pressed_keys[ord("z")] and 500+move2-s > 24:
+        if pressed_keys[ord("z")] and py+move2-s > 24:
             move2 = move2 - 1 + slow
-        if pressed_keys[ord("q")] and 950+move1-s > 20:
+        if pressed_keys[ord("q")] and px+move1-s > 20:
             move1 = move1 - 1 + slow
-        if pressed_keys[ord("s")] and 500+move2+s < 978:
+        if pressed_keys[ord("s")] and py+move2+s < 978:
             move2 = move2 + 1 - slow
-        if pressed_keys[ord("d")] and 950+move1+s < 1895:
+        if pressed_keys[ord("d")] and px+move1+s < 1895:
             move1 = move1 + 1 - slow
         screen.fill((241, 249, 249))
         if iax+nove1 > 1895:
@@ -192,22 +196,51 @@ def main_loop():
             nove2 = nove2 + 1 + wlow
         #pygame.draw.rect(screen, color, pygame.Rect(0, 0, 10000, 10000))
         if iasize < 490:
-            if int(iax+nove1) < int(pos_x[randint(0,0)]):
-                nove1 = nove1 + 1 + wlow
-                #nove1 = int(pos_x[randint(0,2)]) - iax
-            if int(iax+nove1) > int(pos_x[randint(0,0)]):
-                nove1 = nove1 - 1 + wlow
-                #nove1 = int(pos_x[randint(0,2)]) - iax
-            if int(iay+nove2) < int(pos_y[randint(0,0)]):
-                nove2 = nove2 + 1 + wlow
-                #nove2 = int(pos_y[randint(0,2)]) - iay
-            if int(iay+nove2) > int(pos_y[randint(0,0)]):
-                nove2 = nove2 - 1 + wlow
-                #nove2 = int(pos_y[randint(0,2)]) - iay
-            if int(iay+nove2) == int(pos_y[randint(0,0)]):
-                pos_x[0] = randint(50,1250)
-            if int(iax+nove1) == int(pos_x[randint(0,0)]):
-                pos_y[0] = randint(50,1870)
+            if iasize <= size:
+                if int(iax+nove1) < int(pos_x[randint(0,0)]):
+                    nove1 = nove1 + 1 + wlow
+                    #nove1 = int(pos_x[randint(0,2)]) - iax
+                if int(iax+nove1) > int(pos_x[randint(0,0)]):
+                    nove1 = nove1 - 1 + wlow
+                    #nove1 = int(pos_x[randint(0,2)]) - iax
+                if int(iay+nove2) < int(pos_y[randint(0,0)]):
+                    nove2 = nove2 + 1 + wlow
+                    #nove2 = int(pos_y[randint(0,2)]) - iay
+                if int(iay+nove2) > int(pos_y[randint(0,0)]):
+                    nove2 = nove2 - 1 + wlow
+                    #nove2 = int(pos_y[randint(0,2)]) - iay
+                if int(iay+nove2) == int(pos_y[randint(0,0)]):
+                    pos_x[0] = randint(50,1250)
+                if int(iax+nove1) == int(pos_x[randint(0,0)]):
+                    pos_y[0] = randint(50,1870)
+            if iasize >= size:
+                if int(iax+nove1) < int(psx):
+                    nove1 = nove1 + 0.3 + wlow
+                    #nove1 = int(pos_x[randint(0,2)]) - iax
+                if int(iax+nove1) > int(psx):
+                    nove1 = nove1 - 0.3 + wlow
+                    #nove1 = int(pos_x[randint(0,2)]) - iax
+                if int(iay+nove2) < int(psy):
+                    nove2 = nove2 + 0.3 + wlow
+                    #nove2 = int(pos_y[randint(0,2)]) - iay
+                if int(iay+nove2) > int(psy):
+                    nove2 = nove2 - 0.3 + wlow
+        if psx - size <= piax and psx + size >= piax and psy - size <= piay and psy + size >= piay and size > iasize:
+            size = size + iasize
+            iarestart = 0
+            if iarestart == 0:
+                iax = randint(100,1820)
+                iay = randint(100,1180)
+                iarestart = 1
+            iasize = 20
+        if psx - size <= piax and psx + size >= piax and psy - size <= piay and psy + size >= piay and size < iasize:
+            iasize = iasize + size
+            restart = 0
+            if restart == 0:
+                px = randint(50,1870)
+                py = randint(50,1230)
+                restart = 1
+            size = 20
         for i in range(200):
             if psx - size <= int(pos_x[i]) and psx + size >= int(pos_x[i]) and psy - size <= int(pos_y[i]) and psy + size >= int(pos_y[i]) and size < 490:
                 size = size + 1
@@ -220,7 +253,7 @@ def main_loop():
             pygame.draw.rect(screen, color, pygame.Rect(0, y[i], 12000, 2))
             pygame.draw.rect(screen, color, pygame.Rect(y[i], 0, 2, 12000))
             pygame.draw.circle(screen, (color1[i], color2[i], color3[i]), (pos_x[i], pos_y[i]), 10)
-        pygame.draw.circle(screen, (color1[i], color2[i], color3[i]), (950 + move1, 500 + move2), size)
+        pygame.draw.circle(screen, (color1[i], color2[i], color3[i]), (px+ move1, py + move2), size)
         pygame.draw.circle(screen, (color1[10], color2[20], color3[30]), (iax + nove1, iay + nove2), iasize)
         pygame.display.flip()
         
